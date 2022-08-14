@@ -4,6 +4,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Resource } from './resource/resource.entity';
 import { ResourceModule } from './resource/resource.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './auth/roles.guard';
+import { User } from './users/user.entity';
 
 @Module({
   imports: [
@@ -15,9 +20,11 @@ import { ResourceModule } from './resource/resource.module';
       username: 'postgres',
       password: 'password',
       database: 'ct_resource',
-      entities:[Resource],
+      entities:[Resource,User],
       synchronize: false,
     }),
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
