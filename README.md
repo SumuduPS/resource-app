@@ -30,7 +30,7 @@ $ npm run test:cov
 ## Instructions
 step 1: Change environment variables in env file and point to the database
 
-step 2: Backup file for the database without data can be found in src/db/backup.
+step 2: Scripts to create the database without data can be found in src/db/backup.
 
 step 3: Use /user/createUser route to create users
 
