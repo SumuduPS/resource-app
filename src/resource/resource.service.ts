@@ -136,7 +136,6 @@ export class ResourceService {
             status=StatusMessage.FAILED;
         }
        
-
          if(status===StatusMessage.SUCCESS){
                 response.status=status;
                 response.data=data;
