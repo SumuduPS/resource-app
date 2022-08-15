@@ -2,7 +2,6 @@
 ## Description
 
 Resource Backend application
-
 ## Installation
 
 ```bash
@@ -17,9 +16,6 @@ $ npm run start
 
 # watch mode
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
 ## Test
@@ -28,9 +24,10 @@ $ npm run start:prod
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
 # test coverage
 $ npm run test:cov
 ```
+## Instructions
+step 1: Change environment variables in env file and point to the database
+
+step 2: Change 
