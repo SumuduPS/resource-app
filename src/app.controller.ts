@@ -13,7 +13,7 @@ export class AppController {
       return this.authService.login(req.user,res);
     }
 
-    // @UseGuards(LocalAuthGuard)
+
     @Post('user/logout')
     async logout(@Res({passthrough:true}) res) {
       return this.authService.logout(res);
