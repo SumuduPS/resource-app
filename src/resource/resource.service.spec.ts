@@ -4,6 +4,7 @@ import {getRepositoryToken} from '@nestjs/typeorm'
 import { Resource } from './resource.entity';
 import { Repository } from 'typeorm';
 import { ResourceDto } from './dto/resource.dto';
+import { Logger } from '@nestjs/common';
 
 describe('ResourceService', () => {
   let service: ResourceService;
@@ -19,6 +20,13 @@ describe('ResourceService', () => {
           insert: jest.fn(),
           update: jest.fn(),
           delete: jest.fn(),
+        }
+      },
+      {
+        provide: Logger,
+        useFactory:()=>{
+          const logger: Logger= new Logger();
+          return logger;
         }
       }
       ],
