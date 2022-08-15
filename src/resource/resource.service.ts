@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ExecutionResponse } from './dto/execution-response.dto';
 import { ResourceDto } from './dto/resource.dto';
 import { StatusMessage } from './enum/status-message.enum';
@@ -12,6 +12,7 @@ export class ResourceService {
     constructor(
         @InjectRepository(Resource)
         private readonly _resourceRepository: Repository<Resource>,
+        private readonly logger: Logger,
       ) {}
 
     async getAllPublicResources(){
@@ -21,10 +22,12 @@ export class ResourceService {
         let response=new ExecutionResponse();
 
         try {
+            this.logger.debug(`Started executing getAllPublicResources`)
             data=await this._resourceRepository.find({where:{
                 type:RESOURCE_TYPE.PUBLIC
             }});
         } catch (error) {
+            this.logger.error(`Error in executing getAllPublicResources`,error)
             errorMessage=error.message;
             status=StatusMessage.FAILED;
         }
@@ -37,6 +40,7 @@ export class ResourceService {
             response.message=errorMessage;
         }
 
+        this.logger.debug(`Finished executing getAllPublicResources`)
         return response;
     }
 
@@ -47,10 +51,13 @@ export class ResourceService {
         let response=new ExecutionResponse();
 
         try{
+            this.logger.debug(`Started executing getAllPrivateResources`)
+
             data=await this._resourceRepository.find({where:{
                 type:RESOURCE_TYPE.PRIVATE
             }});
         }catch(error){
+            this.logger.error(`Error in executing getAllPrivateResources`,error)
             errorMessage=error.message;
             status=StatusMessage.FAILED;
         }
@@ -63,6 +70,7 @@ export class ResourceService {
             response.status=status;
             response.message=errorMessage;
         }
+        this.logger.debug(`Finished executing getAllPrivateResources`)
         return response;
     }
 
@@ -74,6 +82,7 @@ export class ResourceService {
         let response=new ExecutionResponse();
 
         try {
+            this.logger.debug(`Started executing getAllAdminResources`)
             data= await this._resourceRepository.find(
                 {
                     where:
@@ -83,6 +92,8 @@ export class ResourceService {
                     ]
                 });
         } catch (error) {
+            this.logger.error(`Error in executing getAllAdminResources`,error)
+
             errorMessage=error.message;
             status=StatusMessage.FAILED;
         }
@@ -95,6 +106,8 @@ export class ResourceService {
                 response.message=errorMessage;
             }
 
+        this.logger.debug(`Finished executing getAllAdminResources`)
+
             return response;
     }
 
@@ -102,6 +115,8 @@ export class ResourceService {
         let status=StatusMessage.SUCCESS;
         let errorMessage='';
         let response=new ExecutionResponse();
+
+        this.logger.debug(`Started executing addResourcesById`)
 
         resource.id=resourceId;
 
@@ -114,10 +129,14 @@ export class ResourceService {
             response.status=status;
             response.resourceId=resourceId;
         }else if(status===StatusMessage.FAILED){
+            this.logger.error(`Failed executing addResourcesById`)
             response.status=status;
             response.message=errorMessage;
             response.resourceId=resourceId;
         }
+
+        this.logger.debug(`Finished executing addResourcesById`)
+
         return response;
     }
 
@@ -128,6 +147,7 @@ export class ResourceService {
         let response=new ExecutionResponse();
 
         try {
+            this.logger.debug(`Started executing getPrivateResourceById`)
             data=await this._resourceRepository.find({where:{
                 id:resourceId
             }});
@@ -144,6 +164,8 @@ export class ResourceService {
                 response.message=errorMessage;
             }
 
+            this.logger.debug(`Finished executing getPrivateResourceById`)
+
             return response;
     }
 
@@ -151,6 +173,7 @@ export class ResourceService {
         let status=StatusMessage.SUCCESS;
         let errorMessage='';
         let response=new ExecutionResponse();
+        this.logger.debug(`Started executing updateResourceById`)
 
         const updateResult=await this._resourceRepository.update({id:resourceId},resource).then(response=>response.affected).catch((error)=>{
                 errorMessage=error.driverError?.detail?error.driverError?.detail:error.message;
@@ -171,6 +194,8 @@ export class ResourceService {
             response.message=errorMessage;
             response.resourceId=resourceId;
         }
+
+        this.logger.debug(`Finished executing updateResourceById`)
         return response;
     }
 
@@ -178,6 +203,7 @@ export class ResourceService {
         let status=StatusMessage.SUCCESS;
         let errorMessage='';
         let response=new ExecutionResponse();
+        this.logger.debug(`Started executing removeResourceById`)
 
         const deleteResult=await this._resourceRepository.delete(resourceId).then(response=>response.affected).catch((error)=>{
             errorMessage=error.driverError?.detail?error.driverError?.detail:error.message;
@@ -199,6 +225,7 @@ export class ResourceService {
         response.resourceId=resourceId;
     }
     
+    this.logger.debug(`Finished executing removeResourceById`)
     return response;
     }
 }

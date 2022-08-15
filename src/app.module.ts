@@ -7,19 +7,17 @@ import { ResourceModule } from './resource/resource.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { User } from './users/user.entity';
+import { ConfigurationModule } from './configuration/configuration.module';
+import { ConfigurationService } from './configuration/configuration.service';
 
 @Module({
   imports: [
+    ConfigurationModule,
     ResourceModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'password',
-      database: 'ct_resource',
-      entities:[Resource,User],
-      synchronize: false,
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigurationService],
+      useFactory: (configService: ConfigurationService) =>
+        configService.postgresConfig,
     }),
     AuthModule,
     UsersModule,
