@@ -30,4 +30,8 @@ $ npm run test:cov
 ## Instructions
 step 1: Change environment variables in env file and point to the database
 
-step 2: Change 
+step 2: Backup file for the database can be found in src/db/backup.
+
+step 3: Use /createUser route to create users
+
+step 4: Use resource routes to test the functionality
